@@ -1,35 +1,30 @@
-import React, { Component } from 'react';
+import React from 'react';
+import axios from 'axios';
 import {
+  Container,
   Form,
   Header,
-  Container,
-  List,
   Input,
-  Segment,
-} from 'semantic-ui-react'
-import axios from 'axios'
-
+  List,
+  Segment
+} from 'semantic-ui-react';
 const styles = {
-  complete: { textDecoration: 'line-through', color: 'grey'}
+  complete: { textDecoration: 'line-through', color: 'grey' }
 }
-
-class App extends Component {
+class App extends React.Component {
   state = { name: '', todos: [] }
-
   componentDidMount() {
     axios.get('/api/todos')
       .then( ({ data: todos }) => this.setState({ todos }) )
   }
-
-  handleSubmit = e => {
-    e.preventDefault()
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { name, todos } = this.state;
     axios.post('/api/todos', { name })
       .then( ({ data }) => {
-        this.setState({ todos: [name, ...todos], name: '' })
-    });
+        this.setState({ todos: [data, ...todos], name: '' });
+      })
   }
-
   updateTodo = id => {
     axios.put(`/api/todos/${id}`)
       .then( ({ data }) => {
@@ -38,16 +33,20 @@ class App extends Component {
             return data
           return todo
         });
-        this.setState({ todos })
-    });
+        this.setState({ todos });
+      });
   }
-
   render() {
     const { name, todos } = this.state;
     return (
       <Container>
         <Segment textAlign='center'>
-          <Header as='h3' textAlign='center'>Todo List</Header>
+          <Header
+            as='h3'
+            textAlign='center'
+          >
+            TodoList
+          </Header>
           <Form onSubmit={this.handleSubmit}>
             <Input
               required
@@ -64,12 +63,12 @@ class App extends Component {
               >
                 {todo.name}
               </List.Item>
-            )}
+             )
+            }
           </List>
         </Segment>
       </Container>
     );
   }
 }
-
 export default App;
